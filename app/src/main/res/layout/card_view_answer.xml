@@ -23,7 +23,6 @@
             android:id="@+id/textViewAnswerTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="#3498db"
             android:textSize="18sp"
             android:layout_weight="1"
             android:textStyle="bold"
@@ -32,6 +31,7 @@
         <CheckBox
             android:id="@+id/checkBoxAnswerSelected"
             android:layout_width="wrap_content"
+            android:enabled="false"
             android:layout_height="wrap_content" />
 
     </LinearLayout>

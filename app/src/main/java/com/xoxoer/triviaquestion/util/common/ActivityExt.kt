@@ -3,6 +3,7 @@ package com.xoxoer.triviaquestion.util.common
 import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
+import com.xoxoer.triviaquestion.models.Answer
 
 fun Activity.dismissKeyboard() {
     val view = this.currentFocus
@@ -20,3 +21,7 @@ fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
 
 fun <E> MutableList<E>.updated(index: Int, elem: E) =
     mapIndexed { i, existing -> if (i == index) elem else existing }
+
+fun List<String>.transformToAnswer(): List<Answer>{
+    return map { Answer(it, false) }
+}

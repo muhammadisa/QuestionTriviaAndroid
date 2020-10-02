@@ -1,34 +1,45 @@
 package com.xoxoer.triviaquestion.ui.questions.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.RecyclerView
 import com.xoxoer.triviaquestion.R
+import com.xoxoer.triviaquestion.models.Answer
 import kotlinx.android.synthetic.main.card_view_answer.view.*
 
 class AnswerAdapter(
     private val questionAdapter: QuestionAdapter
 ) : RecyclerView.Adapter<AnswerAdapter.AnswerViewHolder>() {
 
-    private val answers = mutableListOf<String>()
+    private val answers = mutableListOf<Answer>()
     private val correctAnswer = ObservableField<String>()
     private val questionPosition = ObservableField<Int>()
 
-    internal fun setAnswersAndCorrectAnswer(position: Int, correct: String, answers: List<String>) {
+    internal fun setAnswersAndCorrectAnswer(position: Int, correct: String, answers: List<Answer>) {
         this.answers.apply {
             addAll(answers)
-            add(correct)
+            add(Answer(correct, false))
             random()
             correctAnswer.set(correct)
             questionPosition.set(position)
         }
+        notifyDataSetChanged()
+    }
+
+    private fun selectAnswer(position: Int, answerItem: Answer) {
+        answers.filter { ans -> ans.isSelected }.map { ans -> ans.isSelected = false }
+        answerItem.isSelected = true
+        questionAdapter.setAnswer(
+            questionPosition.get()!!,
+            answerItem.answer == correctAnswer.get()
+        )
         notifyDataSetChanged()
     }
 
@@ -48,11 +59,12 @@ class AnswerAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: AnswerViewHolder, position: Int) {
-        val answer = answers[position]
+        val answerItem = answers[position]
         with(holder) {
-            textViewAnswerTitle.text = answer
+            textViewAnswerTitle.text = answerItem.answer
+            checkBoxAnswerSelected.isChecked = answerItem.isSelected
             constraintLayoutAnswer.setOnClickListener {
-                questionAdapter.setAnswer(questionPosition.get()!!, answer == correctAnswer.get())
+                selectAnswer(position, answerItem)
             }
         }
     }

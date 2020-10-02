@@ -2,11 +2,9 @@ package com.xoxoer.triviaquestion.ui.questions.adapter
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xoxoer.triviaquestion.R
 import com.xoxoer.triviaquestion.models.Result
 import com.xoxoer.triviaquestion.util.common.conditionalVisibility
+import com.xoxoer.triviaquestion.util.common.transformToAnswer
 import kotlinx.android.synthetic.main.card_view_questions.view.*
 
 class QuestionAdapter(
-    private val activity: Activity,
     private val questions: MutableList<Result>
 ) : RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder>() {
 
@@ -29,6 +27,10 @@ class QuestionAdapter(
         val linearLayoutBooleanType: LinearLayout = itemView.linearLayoutBooleanType
         val linearLayoutMultipleType: LinearLayout = itemView.linearLayoutMultipleType
         val recyclerViewAnswer: RecyclerView = itemView.recyclerViewAnswer
+    }
+
+    internal fun getAnswers(): List<Boolean?> {
+        return answered.toList()
     }
 
     private fun setupAnswerAdapter(holder: QuestionViewHolder) {
@@ -43,8 +45,6 @@ class QuestionAdapter(
 
     fun setAnswer(position: Int, value: Boolean) {
         answered[position] = value
-        activity.findViewById<Button>(R.id.buttonFinishQuiz)
-            .conditionalVisibility(answered.size == questions.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
@@ -66,7 +66,7 @@ class QuestionAdapter(
                 answerAdapter.setAnswersAndCorrectAnswer(
                     position,
                     question.correctAnswer,
-                    question.incorrectAnswers
+                    question.incorrectAnswers.transformToAnswer()
                 )
             }
             else -> {
