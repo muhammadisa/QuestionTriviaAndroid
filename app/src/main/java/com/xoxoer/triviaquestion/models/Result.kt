@@ -7,6 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Result(
+    val answered: Boolean,
     @SerializedName("category")
     val category: String,
     @SerializedName("correct_answer")

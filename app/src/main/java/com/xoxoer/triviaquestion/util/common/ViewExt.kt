@@ -18,3 +18,8 @@ fun View.invisible() {
 fun View.gone() {
     visibility = View.GONE
 }
+
+fun View.gone(condition: Boolean) {
+    visibility = if(condition) View.GONE
+    else View.VISIBLE
+}

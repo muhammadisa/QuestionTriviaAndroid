@@ -17,7 +17,7 @@ class QuestionActivity : AppCompatActivity() {
     private lateinit var questionAdapter: QuestionAdapter
 
     private fun initUserAdapter(result: List<Result>) {
-        questionAdapter = QuestionAdapter(this, result)
+        questionAdapter = QuestionAdapter(this, result.toMutableList())
         questionRecyclerView = findViewById(R.id.recyclerViewQuestion)
         questionRecyclerView.apply {
             setHasFixedSize(true)
@@ -35,14 +35,7 @@ class QuestionActivity : AppCompatActivity() {
         )
 
         buttonFinishQuiz.setOnClickListener {
-            val answers = questionAdapter.getAnswers()
-            val correctAnswer = answers.filter { it }
-            Toast.makeText(
-                this@QuestionActivity,
-                "Right ${correctAnswer.size} from ${answers.size}",
-                Toast.LENGTH_SHORT
-            ).show()
-            questionAdapter.clearAnswers()
+
         }
     }
 }
