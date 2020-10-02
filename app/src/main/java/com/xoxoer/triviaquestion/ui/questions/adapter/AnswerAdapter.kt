@@ -1,21 +1,20 @@
 package com.xoxoer.triviaquestion.ui.questions.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.ObservableField
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.xoxoer.triviaquestion.R
 import kotlinx.android.synthetic.main.card_view_answer.view.*
 
 class AnswerAdapter(
-    private val activity: Activity,
-    private val correct: MutableLiveData<Boolean>
+    private val questionAdapter: QuestionAdapter
 ) : RecyclerView.Adapter<AnswerAdapter.AnswerViewHolder>() {
 
     private val answers = mutableListOf<String>()
@@ -33,13 +32,10 @@ class AnswerAdapter(
         notifyDataSetChanged()
     }
 
-    internal fun onAnswer(answer: (correct: MutableLiveData<Boolean>) -> Unit) {
-        answer(correct)
-    }
-
     inner class AnswerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val constraintLayoutAnswer: ConstraintLayout = itemView.constraintLayoutAnswer
         val textViewAnswerTitle: TextView = itemView.textViewAnswerTitle
+        val checkBoxAnswerSelected: CheckBox = itemView.checkBoxAnswerSelected
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnswerViewHolder {
@@ -54,10 +50,10 @@ class AnswerAdapter(
     override fun onBindViewHolder(holder: AnswerViewHolder, position: Int) {
         val answer = answers[position]
         with(holder) {
-            constraintLayoutAnswer.setOnClickListener {
-                correct.value = answer == correctAnswer.get()
-            }
             textViewAnswerTitle.text = answer
+            constraintLayoutAnswer.setOnClickListener {
+                questionAdapter.setAnswer(questionPosition.get()!!, answer == correctAnswer.get())
+            }
         }
     }
 

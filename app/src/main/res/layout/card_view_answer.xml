@@ -9,9 +9,9 @@
     android:padding="16dp">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -21,12 +21,18 @@
 
         <TextView
             android:id="@+id/textViewAnswerTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="#3498db"
             android:textSize="18sp"
+            android:layout_weight="1"
             android:textStyle="bold"
             tools:text="Answer Name" />
+
+        <CheckBox
+            android:id="@+id/checkBoxAnswerSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

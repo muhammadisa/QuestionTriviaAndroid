@@ -17,3 +17,6 @@ fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
         if (block(it)) newValue else it
     }
 }
+
+fun <E> MutableList<E>.updated(index: Int, elem: E) =
+    mapIndexed { i, existing -> if (i == index) elem else existing }
