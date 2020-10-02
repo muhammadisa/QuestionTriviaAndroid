@@ -1,10 +1,10 @@
 package com.xoxoer.triviaquestion.ui.questions.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +26,8 @@ class QuestionAdapter(
         val textViewQuestion: TextView = itemView.textViewQuestion
         val linearLayoutBooleanType: LinearLayout = itemView.linearLayoutBooleanType
         val linearLayoutMultipleType: LinearLayout = itemView.linearLayoutMultipleType
+        val buttonTrueAnswer: Button = itemView.buttonTrueAnswer
+        val buttonFalseAnswer: Button = itemView.buttonFalseAnswer
         val recyclerViewAnswer: RecyclerView = itemView.recyclerViewAnswer
     }
 
@@ -69,14 +71,20 @@ class QuestionAdapter(
                     question.incorrectAnswers.transformToAnswer()
                 )
             }
-            else -> {
-            }
         }
 
         with(holder) {
             textViewQuestion.text = question.question
             linearLayoutMultipleType.conditionalVisibility(question.type == "multiple")
             linearLayoutBooleanType.conditionalVisibility(question.type == "boolean")
+
+            buttonTrueAnswer.setOnClickListener {
+                setAnswer(position, question.correctAnswer == "True")
+            }
+
+            buttonFalseAnswer.setOnClickListener {
+                setAnswer(position, question.correctAnswer == "False")
+            }
         }
     }
 
