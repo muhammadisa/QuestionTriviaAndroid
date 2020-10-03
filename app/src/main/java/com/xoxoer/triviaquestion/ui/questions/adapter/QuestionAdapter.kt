@@ -20,6 +20,7 @@ class QuestionAdapter(
     private val questions: MutableList<Result>
 ) : RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder>() {
 
+    private var currentPosition = 0
     private lateinit var answerAdapter: AnswerAdapter
     private val answered: MutableList<Boolean?> = questions.map { null }.toMutableList()
 
@@ -36,16 +37,6 @@ class QuestionAdapter(
         return answered.toList()
     }
 
-    private fun setupAnswerAdapter(holder: QuestionViewHolder) {
-        with(holder) {
-            recyclerViewAnswer.apply {
-                setHasFixedSize(true)
-                adapter = answerAdapter
-                layoutManager = LinearLayoutManager(itemView.context)
-            }
-        }
-    }
-
     fun setAnswer(position: Int, value: Boolean) {
         answered[position] = value
     }
@@ -53,29 +44,31 @@ class QuestionAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_view_questions, parent, false)
-        answerAdapter = AnswerAdapter(this)
         return QuestionViewHolder(itemView)
     }
 
     override fun getItemCount(): Int = questions.size
 
+    private fun initializeAnswer(holder: QuestionViewHolder) {
+        answerAdapter = AnswerAdapter(this)
+        holder.recyclerViewAnswer.apply {
+            setHasFixedSize(true)
+            adapter = answerAdapter
+            layoutManager = LinearLayoutManager(holder.itemView.context)
+        }
+        if (!answerAdapter.isAlreadyLoaded()) {
+            answerAdapter.setAnswersAndCorrectAnswer(
+                currentPosition,
+                questions[currentPosition].correctAnswer,
+                questions[currentPosition].incorrectAnswers.transformToAnswer()
+            )
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {
         val question = questions[position]
-
-        when (question.type) {
-            "multiple" -> {
-                if (holder.recyclerViewAnswer.adapter == null) setupAnswerAdapter(holder)
-                if (!answerAdapter.isAlreadyLoaded()) {
-                    answerAdapter.setAnswersAndCorrectAnswer(
-                        position,
-                        question.correctAnswer,
-                        question.incorrectAnswers.transformToAnswer()
-                    )
-                }
-            }
-        }
-
+        currentPosition = position
         with(holder) {
             textViewQuestion.text = question.question.toDecodedURL()
             linearLayoutMultipleType.conditionalVisibility(question.type == "multiple")
@@ -88,6 +81,7 @@ class QuestionAdapter(
             buttonFalseAnswer.setOnClickListener {
                 setAnswer(position, question.correctAnswer == "False")
             }
+            initializeAnswer(this)
         }
     }
 
