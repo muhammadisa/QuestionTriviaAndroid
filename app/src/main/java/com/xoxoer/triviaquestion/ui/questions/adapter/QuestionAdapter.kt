@@ -15,7 +15,6 @@ import com.xoxoer.triviaquestion.util.common.conditionalVisibility
 import com.xoxoer.triviaquestion.util.common.toDecodedURL
 import com.xoxoer.triviaquestion.util.common.transformToAnswer
 import kotlinx.android.synthetic.main.card_view_questions.view.*
-import java.net.URLDecoder
 
 class QuestionAdapter(
     private val questions: MutableList<Result>
@@ -66,8 +65,8 @@ class QuestionAdapter(
 
         when (question.type) {
             "multiple" -> {
-                setupAnswerAdapter(holder)
-                if(!answerAdapter.isAlreadyLoaded()){
+                if (holder.recyclerViewAnswer.adapter == null) setupAnswerAdapter(holder)
+                if (!answerAdapter.isAlreadyLoaded()) {
                     answerAdapter.setAnswersAndCorrectAnswer(
                         position,
                         question.correctAnswer,
