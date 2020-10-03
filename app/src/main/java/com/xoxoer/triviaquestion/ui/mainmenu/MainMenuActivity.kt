@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xoxoer.triviaquestion.R
+import com.xoxoer.triviaquestion.models.Category
 import com.xoxoer.triviaquestion.ui.questions.QuestionActivity
 import com.xoxoer.triviaquestion.util.common.createLoading
 import com.xoxoer.triviaquestion.util.common.onTextChange
@@ -26,11 +27,11 @@ class MainMenuActivity : DaggerAppCompatActivity() {
     lateinit var providerFactory: ViewModelProviderFactory
 
     private val categories = arrayOf(
-        "27:Animals",
-        "18:Computer",
-        "9:General",
-        "21:Sports",
-        "23:History"
+        Category("27:Animals"),
+        Category("18:Computer"),
+        Category("9:General"),
+        Category("21:Sports"),
+        Category("23:History")
     )
 
     private val difficulties = arrayOf(
@@ -61,7 +62,7 @@ class MainMenuActivity : DaggerAppCompatActivity() {
             nothingSelected = {},
             itemSelected = { position ->
                 questionTriviaViewModel.category
-                    .set(categories[position].split(":")[0].toInt())
+                    .set(categories[position].categoryName.split(":")[0].toInt())
             }
         )
 

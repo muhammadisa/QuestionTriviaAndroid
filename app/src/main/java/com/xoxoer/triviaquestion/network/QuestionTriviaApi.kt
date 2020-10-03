@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface QuestionTriviaApi {
-    @GET("/api.php")
+    @GET("/api.php?encode=url3986")
     fun retrieveQuestion(
         @Query("amount") amount: Int,
         @Query("category") category: Int,

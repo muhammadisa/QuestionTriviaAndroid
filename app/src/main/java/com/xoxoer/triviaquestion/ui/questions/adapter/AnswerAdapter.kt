@@ -1,7 +1,6 @@
 package com.xoxoer.triviaquestion.ui.questions.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.RecyclerView
 import com.xoxoer.triviaquestion.R
 import com.xoxoer.triviaquestion.models.Answer
+import com.xoxoer.triviaquestion.util.common.toDecodedURL
 import kotlinx.android.synthetic.main.card_view_answer.view.*
 
 class AnswerAdapter(
@@ -21,6 +21,10 @@ class AnswerAdapter(
     private val answers = mutableListOf<Answer>()
     private val correctAnswer = ObservableField<String>()
     private val questionPosition = ObservableField<Int>()
+
+    internal fun isAlreadyLoaded(): Boolean {
+        return answers.isNotEmpty() && !correctAnswer.get().isNullOrEmpty()
+    }
 
     internal fun setAnswersAndCorrectAnswer(position: Int, correct: String, answers: List<Answer>) {
         this.answers.apply {
@@ -33,7 +37,7 @@ class AnswerAdapter(
         notifyDataSetChanged()
     }
 
-    private fun selectAnswer(position: Int, answerItem: Answer) {
+    private fun selectAnswer(answerItem: Answer) {
         answers.filter { ans -> ans.isSelected }.map { ans -> ans.isSelected = false }
         answerItem.isSelected = true
         questionAdapter.setAnswer(
@@ -61,10 +65,10 @@ class AnswerAdapter(
     override fun onBindViewHolder(holder: AnswerViewHolder, position: Int) {
         val answerItem = answers[position]
         with(holder) {
-            textViewAnswerTitle.text = answerItem.answer
+            textViewAnswerTitle.text = answerItem.answer.toDecodedURL()
             checkBoxAnswerSelected.isChecked = answerItem.isSelected
             constraintLayoutAnswer.setOnClickListener {
-                selectAnswer(position, answerItem)
+                selectAnswer(answerItem)
             }
         }
     }

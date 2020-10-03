@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xoxoer.triviaquestion.R
 import com.xoxoer.triviaquestion.models.Result
 import com.xoxoer.triviaquestion.util.common.conditionalVisibility
+import com.xoxoer.triviaquestion.util.common.toDecodedURL
 import com.xoxoer.triviaquestion.util.common.transformToAnswer
 import kotlinx.android.synthetic.main.card_view_questions.view.*
+import java.net.URLDecoder
 
 class QuestionAdapter(
     private val questions: MutableList<Result>
@@ -65,16 +67,18 @@ class QuestionAdapter(
         when (question.type) {
             "multiple" -> {
                 setupAnswerAdapter(holder)
-                answerAdapter.setAnswersAndCorrectAnswer(
-                    position,
-                    question.correctAnswer,
-                    question.incorrectAnswers.transformToAnswer()
-                )
+                if(!answerAdapter.isAlreadyLoaded()){
+                    answerAdapter.setAnswersAndCorrectAnswer(
+                        position,
+                        question.correctAnswer,
+                        question.incorrectAnswers.transformToAnswer()
+                    )
+                }
             }
         }
 
         with(holder) {
-            textViewQuestion.text = question.question
+            textViewQuestion.text = question.question.toDecodedURL()
             linearLayoutMultipleType.conditionalVisibility(question.type == "multiple")
             linearLayoutBooleanType.conditionalVisibility(question.type == "boolean")
 
