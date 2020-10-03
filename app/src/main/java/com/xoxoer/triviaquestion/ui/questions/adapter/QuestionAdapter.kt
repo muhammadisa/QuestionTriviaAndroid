@@ -73,11 +73,9 @@ class QuestionAdapter(
             textViewQuestion.text = question.question.toDecodedURL()
             linearLayoutMultipleType.conditionalVisibility(question.type == "multiple")
             linearLayoutBooleanType.conditionalVisibility(question.type == "boolean")
-
             buttonTrueAnswer.setOnClickListener {
                 setAnswer(position, question.correctAnswer == "True")
             }
-
             buttonFalseAnswer.setOnClickListener {
                 setAnswer(position, question.correctAnswer == "False")
             }
